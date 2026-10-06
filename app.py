@@ -510,7 +510,9 @@ def logout():
     return redirect(url_for("login"))
 
 
+# Initialize when imported by Vercel/Gunicorn as well as when run locally.
+init_db()
+seed_pre_registered_students()
+
 if __name__ == "__main__":
-    init_db()
-    seed_pre_registered_students()
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=int(os.getenv("PORT", "5000")), debug=False)
