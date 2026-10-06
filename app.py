@@ -1,3 +1,4 @@
+import os
 import sqlite3
 from datetime import datetime, timezone
 from functools import wraps
@@ -7,12 +8,13 @@ import bcrypt
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 
 BASE_DIR = Path(__file__).resolve().parent
-DB = BASE_DIR / "classroom.db"
+DB = Path("/tmp/classroom.db") if os.getenv("VERCEL") else BASE_DIR / "classroom.db"
 
 app = Flask(__name__)
-app.secret_key = "spirit-university-classroom-2026-change-this"
+app.secret_key = os.getenv("CLASSROOM_SECRET_KEY") or "local-development-only-change-this"
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.config["SESSION_COOKIE_SECURE"] = bool(os.getenv("VERCEL"))
 
 APP_NAME = "Spirit University"
 
